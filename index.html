@@ -3,10 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Статусы пользователей</title>
+    <title>Статус пользователей</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Добро пожаловать!</h1>
-    <p>Сайт для отслеживания статусов пользователей.</p>
+    <div class="container">
+        <h1>E-Journal</h1>
+        
+        <div id="status-selector">
+            <input type="text" id="username" placeholder="Введите ник">
+            <button onclick="setStatus('online')">Онлайн</button>
+            <button onclick="setStatus('afk')">Афк</button>
+            <button onclick="setStatus('offline')">Оффлайн</button>
+        </div>
+
+        <h2>Пользователи</h2>
+        <ul id="user-list"></ul>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>

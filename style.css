@@ -1,0 +1,33 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #121212;
+    color: white;
+    text-align: center;
+}
+
+.container {
+    max-width: 400px;
+    margin: 20px auto;
+    background: #222;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+button {
+    margin: 5px;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+#user-list {
+    list-style: none;
+    padding: 0;
+}
+
+.user {
+    padding: 10px;
+    background: #333;
+    margin: 5px 0;
+    border-radius: 5px;
+}
