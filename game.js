@@ -20,7 +20,7 @@ const game = {
     raycaster: new THREE.Raycaster(),
     mouse: new THREE.Vector2(),
     audioContext: null,
-    currentOperationType: null
+    currentOperationType: null,
     isRunning: false
 };
 
@@ -431,8 +431,8 @@ function updateParticles(deltaTime) {
 }
 
 function completeOperation() {
-    game.currentOperation = null;
     game.isRunning = false;
+    game.currentOperation = null;
     
     const elapsed = (Date.now() - game.startTime) / 1000;
     const minutes = Math.floor(elapsed / 60);
@@ -478,8 +478,8 @@ function completeOperation() {
 }
 
 function failOperation(reason) {
-    game.currentOperation = null;
     game.isRunning = false;
+    game.currentOperation = null;
     
     const elapsed = (Date.now() - game.startTime) / 1000;
     const minutes = Math.floor(elapsed / 60);
@@ -508,7 +508,8 @@ function failOperation(reason) {
 let lastTime = performance.now();
 
 function gameLoop() {
-        if (!game.isRunning || !game.currentOperation) return;
+    // 1. Проверяем условия выхода
+    if (!game.isRunning || !game.currentOperation) return;
     
     const currentTime = performance.now();
     const deltaTime = (currentTime - lastTime) / 16.67;
