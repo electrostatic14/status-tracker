@@ -119,7 +119,7 @@ function initThreeJS() {
     });
     game.renderer.setSize(window.innerWidth, window.innerHeight);
     game.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    game.renderer.shadowMap.enabled = true;
+    game.renderer.shadowMap.enabled = false;
     game.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     
     // Lights
