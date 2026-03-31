@@ -225,14 +225,18 @@ function startOperation(operationType) {
     const operation = OPERATIONS[operationType];
     if (!operation) return;
     
+    // Сброс данных
     game.currentOperation = operation;
     game.currentOperationType = operationType;
     game.tasks = [...operation.tasks];
     game.currentTaskIndex = 0;
     game.timer = operation.duration;
+    
+    // ВКЛЮЧАЕМ ИГРУ И ВРЕМЯ
+    lastTime = performance.now(); 
+    game.isRunning = true;
+    
     game.startTime = Date.now();
-    lastTime = performance.now();
-    game.isRunning = true
     game.patient = { health: 100, oxygen: 100, blood: 100 };
     game.accuracy = 100;
     game.mistakes = 0;
@@ -245,8 +249,10 @@ function startOperation(operationType) {
     
     updateTaskDisplay();
     updateVitalsDisplay();
+    
+    // Запуск цикла
     gameLoop();
-}
+        }
 
 function updateTaskDisplay() {
     if (game.currentTaskIndex >= game.tasks.length) {
@@ -508,13 +514,15 @@ function failOperation(reason) {
 let lastTime = performance.now();
 
 function gameLoop() {
-    // 1. Проверяем условия выхода
+    // Если игра не запущена — выходим немедленно
     if (!game.isRunning || !game.currentOperation) return;
     
     const currentTime = performance.now();
-    const deltaTime = (currentTime - lastTime) / 16.67;
+    // Рассчитываем deltaTime (норма ~1)
+    const deltaTime = Math.min((currentTime - lastTime) / 16.67, 5); 
     lastTime = currentTime;
     
+    // Таймер операции
     game.timer -= deltaTime / 60;
     if (game.timer <= 0) {
         failOperation('Время истекло');
@@ -525,14 +533,16 @@ function gameLoop() {
     updateVitals(deltaTime);
     updateVitalsDisplay();
     
+    // Анимация сердца
     if (game.organs.heart) {
-        game.organs.heart.userData.pulsePhase += 0.08 * deltaTime;
+        game.organs.heart.userData.pulsePhase = (game.organs.heart.userData.pulsePhase || 0) + 0.08 * deltaTime;
         const scale = 1 + Math.sin(game.organs.heart.userData.pulsePhase) * 0.05;
         game.organs.heart.scale.set(scale, scale * 1.2, scale * 0.9);
     }
     
     updateParticles(deltaTime);
     
+    // Прогресс инструментов
     if (game.isPerformingAction) {
         const task = game.tasks[game.currentTaskIndex];
         if (task) {
@@ -544,21 +554,8 @@ function gameLoop() {
                 game.isPerformingAction = false;
             }
             
-            document.getElementById('taskProgress').style.width = (game.actionProgress * 100) + '%';
-            
-            if (Math.random() > 0.9) {
-                const target = game.organs[task.target];
-                if (target) {
-                    const colors = {
-                        scalpel: 0xff4444,
-                        forceps: 0xffaa44,
-                        cautery: 0xffff44,
-                        syringe: 0x44ffff,
-                        suture: 0xffffff
-                    };
-                    createParticle(target.position, colors[game.currentTool] || 0xffffff);
-                }
-            }
+            const progressBar = document.getElementById('taskProgress');
+            if (progressBar) progressBar.style.width = (game.actionProgress * 100) + '%';
         }
     }
     
