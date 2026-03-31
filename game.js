@@ -129,8 +129,8 @@ function initThreeJS() {
     const mainLight = new THREE.DirectionalLight(0xffffff, 0.9);
     mainLight.position.set(4, 8, 4);
     mainLight.castShadow = true;
-    mainLight.shadow.mapSize.width = 2048;
-    mainLight.shadow.mapSize.height = 2048;
+    mainLight.shadow.mapSize.width = 512;
+    mainLight.shadow.mapSize.height = 512;
     mainLight.shadow.camera.left = -10;
     mainLight.shadow.camera.right = 10;
     mainLight.shadow.camera.top = 10;
