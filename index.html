@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Операционная 3D - Хирургический Симулятор</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 3D Canvas -->
+    <canvas id="canvas3d"></canvas>
+
+    <!-- Main Menu -->
+    <div id="menu" class="screen">
+        <div class="menu-content">
+            <h1 class="game-title">🏥 ОПЕРАЦИОННАЯ 3D</h1>
+            <p class="game-subtitle">Профессиональный Хирургический Симулятор</p>
+            
+            <div class="operations-list">
+                <div class="operation-card" data-operation="appendix">
+                    <div class="operation-header">
+                        <h3>Аппендэктомия</h3>
+                        <span class="difficulty easy">ЛЕГКО</span>
+                    </div>
+                    <p class="operation-description">
+                        Удаление воспалённого аппендикса. Базовая операция для начинающих хирургов.
+                    </p>
+                    <div class="operation-stats">
+                        <span>⏱️ 5:00</span>
+                        <span>📋 5 этапов</span>
+                        <span>⭐ 100 XP</span>
+                    </div>
+                </div>
+
+                <div class="operation-card" data-operation="tumor">
+                    <div class="operation-header">
+                        <h3>Удаление опухоли</h3>
+                        <span class="difficulty medium">СРЕДНЕ</span>
+                    </div>
+                    <p class="operation-description">
+                        Точная резекция новообразования с сохранением здоровых тканей.
+                    </p>
+                    <div class="operation-stats">
+                        <span>⏱️ 7:00</span>
+                        <span>📋 7 этапов</span>
+                        <span>⭐ 250 XP</span>
+                    </div>
+                </div>
+
+                <div class="operation-card" data-operation="heart">
+                    <div class="operation-header">
+                        <h3>Операция на сердце</h3>
+                        <span class="difficulty hard">СЛОЖНО</span>
+                    </div>
+                    <p class="operation-description">
+                        Кардиохирургическая операция. Требует максимальной концентрации и точности.
+                    </p>
+                    <div class="operation-stats">
+                        <span>⏱️ 10:00</span>
+                        <span>📋 10 этапов</span>
+                        <span>⭐ 500 XP</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game HUD -->
+    <div id="gameHUD" class="screen hidden">
+        <!-- Patient Vitals -->
+        <div class="vitals-panel">
+            <div class="vital-item">
+                <div class="vital-icon">❤️</div>
+                <div class="vital-info">
+                    <div class="vital-label">Здоровье</div>
+                    <div class="vital-bar">
+                        <div class="vital-fill health-fill" id="healthBar"></div>
+                    </div>
+                    <div class="vital-value" id="healthValue">100%</div>
+                </div>
+            </div>
+            <div class="vital-item">
+                <div class="vital-icon">🫁</div>
+                <div class="vital-info">
+                    <div class="vital-label">Кислород</div>
+                    <div class="vital-bar">
+                        <div class="vital-fill oxygen-fill" id="oxygenBar"></div>
+                    </div>
+                    <div class="vital-value" id="oxygenValue">100%</div>
+                </div>
+            </div>
+            <div class="vital-item">
+                <div class="vital-icon">💉</div>
+                <div class="vital-info">
+                    <div class="vital-label">Кровь</div>
+                    <div class="vital-bar">
+                        <div class="vital-fill blood-fill" id="bloodBar"></div>
+                    </div>
+                    <div class="vital-value" id="bloodValue">100%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timer and Score -->
+        <div class="status-panel">
+            <div class="timer" id="timer">05:00</div>
+            <div class="score-info">
+                <div>Точность: <span id="accuracy">100%</span></div>
+                <div>Этап: <span id="currentStage">1/5</span></div>
+            </div>
+        </div>
+
+        <!-- Tools -->
+        <div class="tools-panel">
+            <button class="tool-button active" data-tool="scalpel" title="Скальпель">
+                <span class="tool-icon">🔪</span>
+                <span class="tool-name">Скальпель</span>
+            </button>
+            <button class="tool-button" data-tool="forceps" title="Пинцет">
+                <span class="tool-icon">✂️</span>
+                <span class="tool-name">Пинцет</span>
+            </button>
+            <button class="tool-button" data-tool="cautery" title="Коагулятор">
+                <span class="tool-icon">⚡</span>
+                <span class="tool-name">Коагулятор</span>
+            </button>
+            <button class="tool-button" data-tool="syringe" title="Шприц">
+                <span class="tool-icon">💉</span>
+                <span class="tool-name">Шприц</span>
+            </button>
+            <button class="tool-button" data-tool="suture" title="Нить">
+                <span class="tool-icon">🧵</span>
+                <span class="tool-name">Нить</span>
+            </button>
+        </div>
+
+        <!-- Current Task -->
+        <div class="task-panel">
+            <div class="task-text" id="taskText">Выберите инструмент и начните операцию</div>
+            <div class="task-progress-bar">
+                <div class="task-progress-fill" id="taskProgress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result Screen -->
+    <div id="resultScreen" class="screen hidden">
+        <div class="result-content">
+            <h2 class="result-title" id="resultTitle">ОПЕРАЦИЯ УСПЕШНА!</h2>
+            <div class="result-grade" id="resultGrade">S</div>
+            
+            <div class="result-stats">
+                <div class="result-stat">
+                    <span class="stat-label">Время:</span>
+                    <span class="stat-value" id="resultTime">00:00</span>
+                </div>
+                <div class="result-stat">
+                    <span class="stat-label">Здоровье пациента:</span>
+                    <span class="stat-value" id="resultHealth">100%</span>
+                </div>
+                <div class="result-stat">
+                    <span class="stat-label">Точность:</span>
+                    <span class="stat-value" id="resultAccuracy">100%</span>
+                </div>
+                <div class="result-stat">
+                    <span class="stat-label">Награда:</span>
+                    <span class="stat-value" id="resultXP">+500 XP</span>
+                </div>
+            </div>
+
+            <button class="btn-primary" id="backToMenuBtn">В МЕНЮ</button>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div id="loadingScreen">
+        <div class="loader-container">
+            <div class="loader"></div>
+            <p class="loading-text">Загрузка операционной...</p>
+        </div>
+    </div>
+
+    <!-- Three.js from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- Game Script -->
+    <script src="game.js"></script>
+</body>
+</html>
