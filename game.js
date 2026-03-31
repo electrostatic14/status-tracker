@@ -21,6 +21,7 @@ const game = {
     mouse: new THREE.Vector2(),
     audioContext: null,
     currentOperationType: null
+    isRunning: false
 };
 
 // Operations database
@@ -230,6 +231,8 @@ function startOperation(operationType) {
     game.currentTaskIndex = 0;
     game.timer = operation.duration;
     game.startTime = Date.now();
+    lastTime = performance.now();
+    game.isRunning = true
     game.patient = { health: 100, oxygen: 100, blood: 100 };
     game.accuracy = 100;
     game.mistakes = 0;
@@ -429,6 +432,7 @@ function updateParticles(deltaTime) {
 
 function completeOperation() {
     game.currentOperation = null;
+    game.isRunning = false;
     
     const elapsed = (Date.now() - game.startTime) / 1000;
     const minutes = Math.floor(elapsed / 60);
@@ -475,6 +479,7 @@ function completeOperation() {
 
 function failOperation(reason) {
     game.currentOperation = null;
+    game.isRunning = false;
     
     const elapsed = (Date.now() - game.startTime) / 1000;
     const minutes = Math.floor(elapsed / 60);
@@ -503,7 +508,7 @@ function failOperation(reason) {
 let lastTime = performance.now();
 
 function gameLoop() {
-    if (!game.currentOperation) return;
+        if (!game.isRunning || !game.currentOperation) return;
     
     const currentTime = performance.now();
     const deltaTime = (currentTime - lastTime) / 16.67;
