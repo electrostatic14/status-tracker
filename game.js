@@ -1,4 +1,5 @@
 // Game State
+
 const game = {
     scene: null,
     camera: null,
@@ -21,7 +22,43 @@ const game = {
     mouse: new THREE.Vector2(),
     audioContext: null,
     currentOperationType: null
+    isRunning: false
 };
+
+function startOperation(operationType) {
+    const operation = OPERATIONS[operationType];
+    if (!operation) return;
+    
+    // СБРОС СОСТОЯНИЯ
+    game.currentOperation = operation;
+    game.currentOperationType = operationType;
+    game.tasks = [...operation.tasks];
+    game.currentTaskIndex = 0;
+    game.timer = operation.duration;
+    
+    // ВАЖНО: Сбрасываем время именно в момент старта!
+    lastTime = performance.now(); 
+    
+    game.startTime = Date.now();
+    game.patient = { health: 100, oxygen: 100, blood: 100 };
+    game.accuracy = 100;
+    game.mistakes = 0;
+    game.actionProgress = 0;
+    
+    createOrgan(operation.organType);
+    
+    document.getElementById('menu').classList.add('hidden');
+    document.getElementById('gameHUD').classList.remove('hidden');
+    
+    updateTaskDisplay();
+    updateVitalsDisplay();
+    
+    // Запускаем цикл, только если он еще не запущен
+    if (!game.isRunning) {
+        game.isRunning = true;
+        gameLoop();
+    }
+        }
 
 // Operations database
 const OPERATIONS = {
