@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Operative — 3D Surgical Game</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="hud">
+    <div id="vitals">
+      <div>Heart: <span id="heart">100</span>%</div>
+      <div>Blood: <span id="blood">100</span>%</div>
+      <div>Stress: <span id="stress">0</span>%</div>
+    </div>
+    <div id="tools">
+      <button data-tool="scalpel" class="tool active">Scalpel</button>
+      <button data-tool="forceps" class="tool">Forceps</button>
+      <button data-tool="suture" class="tool">Suture</button>
+      <button id="reset">Reset</button>
+    </div>
+    <div id="messages"></div>
+  </div>
+
+  <canvas id="gameCanvas"></canvas>
+
+  <script src="https://unpkg.com/three@0.154.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.154.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="js/surgeon.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
